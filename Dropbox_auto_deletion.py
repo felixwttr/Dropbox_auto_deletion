@@ -15,7 +15,7 @@ load_dotenv()
 TOKEN = os.getenv('TOKEN')          # Update your DropBox TOKEN in the .env file
 IFTTT_KEY = os.getenv('IFTTT_KEY')  # Update your IFTTT Webhook Key in the .env file
 age_of_files = 30                   # at which age files should be deleted?
-working_dir = '/Test/'              # which folder should be observed?
+working_dir = '/Felix iPhone Scans/'              # which folder should be observed?
 ifttt_integration = True            # do you wish to get an notification through IFTTT whenever a file gets deleted?
 logging = True                      # do you want to have a log file with every action this skript does to your files?
 
@@ -28,7 +28,7 @@ now = datetime.strptime(now, '%Y-%m-%d %H:%M:%S') # current timestamp
 #log function
 def log(message):
     log_file = open(log_path, 'a')
-    log_file.write(datetime.now().strftime('%d.%m.%Y') + ' ' + message + '\n')
+    log_file.write(datetime.now().strftime('%d.%m.%Y') + ' --- ' + message + '\n')
     log_file.close()
 
 # establish connection to Dropbox
@@ -57,17 +57,17 @@ for file in content_to_return:
     delta = (now - created).days
     if delta >= age_of_files:
         dbx.files_delete(working_dir + file)
-        print('Die Datei ' + str(file) + ' wurde gelöscht!')
+        print('DELETED: ' + str(file) + '!')
         if logging:
-            log('Die Datei ' + str(file) + ' wurde gelöscht!')
+            log('DELETED:' + str(file) + '!')
         if ifttt_integration:
             url = "https://maker.ifttt.com/trigger/file_deleted/with/key/" + IFTTT_KEY
             data = {'value1': file, 'value2': '', 'value3': ''}
             headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
             r = requests.post(url, data=json.dumps(data), headers=headers)
     else:
-        print('The file ' + str(file) + ' was NOT deleted. Is was not ' + str(age_of_files) + ' days old.')
+        print('SKIPPED: \"' + str(file) + '\"! Reason: Not older than ' + str(age_of_files) + ' days')
         if logging:
-            log('The file ' + str(file) + ' was NOT deleted. Is was not ' + str(age_of_files) + ' days old.')
+            log('SKIPPED: \"' + str(file) + '\"! Reason: Not older than ' + str(age_of_files) + ' days')
 
 
