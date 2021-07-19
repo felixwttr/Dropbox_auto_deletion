@@ -6,18 +6,20 @@ import pytz
 import os
 from dotenv import load_dotenv
 from pathlib import Path
+import requests
+import json
 
 #Bitte anpassen
 
 load_dotenv()
 TOKEN = os.getenv('TOKEN')
+IFTTT_KEY = os.getenv('IFTTT_KEY')
 age_of_files = 30
 working_dir = '/Test/'
 
 
 srcpath = Path(__file__).parent.absolute()
 log_path = str(srcpath) + '/log.log'
-print(log_path)
 now = datetime.now(pytz.utc).strftime('%Y-%m-%d %H:%M:%S')
 now = datetime.strptime(now, '%Y-%m-%d %H:%M:%S')
 
@@ -54,6 +56,10 @@ for file in content_to_return:
         dbx.files_delete(working_dir + file)
         print('Die Datei ' + str(file) + ' wurde gelöscht!')
         log('Die Datei ' + str(file) + ' wurde gelöscht!')
+        url = "https://maker.ifttt.com/trigger/file_deleted/with/key/" + IFTTT_KEY
+        data = {'value1': file, 'value2': '', 'value3': ''}
+        headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+        r = requests.post(url, data=json.dumps(data), headers=headers)
     else:
         print('Die Datei ' + str(file) + ' ist noch keine ' + str(age_of_files) + ' Tage alt.')
         log('Die Datei ' + str(file) + ' ist noch keine ' + str(age_of_files) + ' Tage alt.')
