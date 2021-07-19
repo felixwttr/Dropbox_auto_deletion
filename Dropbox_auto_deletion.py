@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-
 import dropbox
 from datetime import datetime
 import pytz
@@ -9,29 +8,33 @@ from pathlib import Path
 import requests
 import json
 
-#Bitte anpassen
-
 load_dotenv()
-TOKEN = os.getenv('TOKEN')
-IFTTT_KEY = os.getenv('IFTTT_KEY')
-age_of_files = 30
-working_dir = '/Test/'
 
+#Please configure for your needs
 
+TOKEN = os.getenv('TOKEN')          # Update your DropBox TOKEN in the .env file
+IFTTT_KEY = os.getenv('IFTTT_KEY')  # Update your IFTTT Webhook Key in the .env file
+age_of_files = 30                   # at which age files should be deleted?
+working_dir = '/Test/'              # which folder should be observed?
+ifttt_integration = True            # do you wish to get an notification through IFTTT whenever a file gets deleted?
+logging = True                      # do you want to have a log file with every action this skript does to your files?
+
+# Don't touch these
 srcpath = Path(__file__).parent.absolute()
-log_path = str(srcpath) + '/log.log'
+log_path = str(srcpath) + '/log.log' # pwd of logfile
 now = datetime.now(pytz.utc).strftime('%Y-%m-%d %H:%M:%S')
-now = datetime.strptime(now, '%Y-%m-%d %H:%M:%S')
+now = datetime.strptime(now, '%Y-%m-%d %H:%M:%S') # current timestamp
 
+#log function
 def log(message):
     log_file = open(log_path, 'a')
     log_file.write(datetime.now().strftime('%d.%m.%Y') + ' ' + message + '\n')
     log_file.close()
 
-#Verbindung zur Dropbox aufbauen
+# establish connection to Dropbox
 dbx = dropbox.Dropbox(TOKEN)
 
-# Inhalt des Working Directorys auslesen
+# Read files within working_directory
 content_to_return = []
 folder_content = dbx.files_list_folder(working_dir)
 dir_content = folder_content.entries
@@ -47,7 +50,7 @@ for fobj in dir_content:
         else:
             print('Datei konnte nicht der Liste der Dateien hinzugefügt werden')
 
-# Prüfen ob Datei älter als age_of_file Tage alt ist, falls ja löschen, falls nein nichts tun
+# Check whether file is old enough to be deleted
 for file in content_to_return:
     metainfo = dbx.files_get_metadata(working_dir + file).client_modified
     created = datetime.strptime(str(metainfo), '%Y-%m-%d %H:%M:%S')
@@ -55,13 +58,16 @@ for file in content_to_return:
     if delta >= age_of_files:
         dbx.files_delete(working_dir + file)
         print('Die Datei ' + str(file) + ' wurde gelöscht!')
-        log('Die Datei ' + str(file) + ' wurde gelöscht!')
-        url = "https://maker.ifttt.com/trigger/file_deleted/with/key/" + IFTTT_KEY
-        data = {'value1': file, 'value2': '', 'value3': ''}
-        headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
-        r = requests.post(url, data=json.dumps(data), headers=headers)
+        if logging:
+            log('Die Datei ' + str(file) + ' wurde gelöscht!')
+        if ifttt_integration:
+            url = "https://maker.ifttt.com/trigger/file_deleted/with/key/" + IFTTT_KEY
+            data = {'value1': file, 'value2': '', 'value3': ''}
+            headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+            r = requests.post(url, data=json.dumps(data), headers=headers)
     else:
-        print('Die Datei ' + str(file) + ' ist noch keine ' + str(age_of_files) + ' Tage alt.')
-        log('Die Datei ' + str(file) + ' ist noch keine ' + str(age_of_files) + ' Tage alt.')
+        print('The file ' + str(file) + ' was NOT deleted. Is was not ' + str(age_of_files) + ' days old.')
+        if logging:
+            log('The file ' + str(file) + ' was NOT deleted. Is was not ' + str(age_of_files) + ' days old.')
 
 
