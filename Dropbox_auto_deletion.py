@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 
 import dropbox
-import os
 from datetime import datetime
 import pytz
-
+import os
+from dotenv import load_dotenv
 #Bitte anpassen
-TOKEN = 'YOUR-TOKEN-HERE'
+
+load_dotenv()
+TOKEN = os.getenv('TOKEN')
 age_of_files = 30
 working_dir = '/Test/'
 
@@ -20,10 +22,11 @@ dbx = dropbox.Dropbox(TOKEN)
 # Inhalt des Working Directorys auslesen
 content_to_return = []
 folder_content = dbx.files_list_folder(working_dir)
+dir_content = folder_content.entries
 while folder_content.has_more:
     cursor = folder_content.cursor
     folder_content = dropbox.dropbox.Dropbox.files_list_folder_continue(cursor)
-    dir_content += folder_contents.entries
+    dir_content += folder_content.entries
 
 dir_content = folder_content.entries
 for fobj in dir_content:
