@@ -5,6 +5,8 @@ from datetime import datetime
 import pytz
 import os
 from dotenv import load_dotenv
+from pathlib import Path
+
 #Bitte anpassen
 
 load_dotenv()
@@ -13,8 +15,16 @@ age_of_files = 30
 working_dir = '/Test/'
 
 
+srcpath = Path(__file__).parent.absolute()
+log_path = str(srcpath) + '/log.log'
+print(log_path)
 now = datetime.now(pytz.utc).strftime('%Y-%m-%d %H:%M:%S')
 now = datetime.strptime(now, '%Y-%m-%d %H:%M:%S')
+
+def log(message):
+    log_file = open(log_path, 'a')
+    log_file.write(datetime.now().strftime('%d.%m.%Y') + ' ' + message + '\n')
+    log_file.close()
 
 #Verbindung zur Dropbox aufbauen
 dbx = dropbox.Dropbox(TOKEN)
@@ -43,7 +53,9 @@ for file in content_to_return:
     if delta >= age_of_files:
         dbx.files_delete(working_dir + file)
         print('Die Datei ' + str(file) + ' wurde gelöscht!')
+        log('Die Datei ' + str(file) + ' wurde gelöscht!')
     else:
         print('Die Datei ' + str(file) + ' ist noch keine ' + str(age_of_files) + ' Tage alt.')
+        log('Die Datei ' + str(file) + ' ist noch keine ' + str(age_of_files) + ' Tage alt.')
 
 
