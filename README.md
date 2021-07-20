@@ -20,7 +20,7 @@ Hi, I'm Felix. I automated my routine of scanning my documents, bills, etc. and 
 3. Install all required packages through pip
 	Linux/Mac: `pip3 install -r requirements.txt`
 	Windows:   `pip install -r requirements.txt`
-4. Edit the variables to fit your pupose
+4. Edit the variables to fit your pupose.   
 	`age_of_files = 30  # at which age files should be deleted?   
 	 working_dir = '/<observed_dir>/'  # which folder should be observed?   
 	 ifttt_integration = True  # do you wish to get an notification through IFTTT whenever a file gets deleted?   
