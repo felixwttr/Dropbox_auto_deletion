@@ -11,13 +11,15 @@ import json
 load_dotenv()
 
 #Please configure for your needs
+TOKEN = os.getenv('TOKEN')                  # Update your DropBox TOKEN in the .env file
+IFTTT_KEY = os.getenv('IFTTT_KEY')          # Update your IFTTT Webhook Key in the .env file
+age_of_files = 30                           # at which age files should be deleted?
+working_dir = '/Felix iPhone Scans/'        # which folder should be observed?
+ifttt_integration = True                    # do you wish to get an notification through IFTTT whenever a file gets deleted?
+logging = True                              # do you want to have a log file with every action this skript does to your files?
+run_ifttt_webhook_name = 'run_dropbox_automatic_deletion'
+deleted_ifttt_webhook_name = 'file_deleted'
 
-TOKEN = os.getenv('TOKEN')          # Update your DropBox TOKEN in the .env file
-IFTTT_KEY = os.getenv('IFTTT_KEY')  # Update your IFTTT Webhook Key in the .env file
-age_of_files = 30                   # at which age files should be deleted?
-working_dir = '/Felix iPhone Scans/'              # which folder should be observed?
-ifttt_integration = True            # do you wish to get an notification through IFTTT whenever a file gets deleted?
-logging = True                      # do you want to have a log file with every action this skript does to your files?
 
 # Don't touch these
 srcpath = Path(__file__).parent.absolute()
@@ -33,6 +35,12 @@ def log(message):
 
 # establish connection to Dropbox
 dbx = dropbox.Dropbox(TOKEN)
+
+if ifttt_integration:
+    url = 'https://maker.ifttt.com/trigger/' + run_ifttt_webhook_name + '/with/key/' + IFTTT_KEY
+    data = {'value1': '', 'value2': '', 'value3': ''}
+    headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+    r = requests.post(url, data=json.dumps(data), headers=headers)
 
 # Read files within working_directory
 content_to_return = []
@@ -61,7 +69,7 @@ for file in content_to_return:
         if logging:
             log('DELETED:' + str(file) + '!')
         if ifttt_integration:
-            url = "https://maker.ifttt.com/trigger/file_deleted/with/key/" + IFTTT_KEY
+            url = 'https://maker.ifttt.com/trigger/' + deleted_ifttt_webhook_name +'/with/key/' + IFTTT_KEY
             data = {'value1': file, 'value2': '', 'value3': ''}
             headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
             r = requests.post(url, data=json.dumps(data), headers=headers)
