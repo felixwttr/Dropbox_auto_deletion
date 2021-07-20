@@ -21,12 +21,12 @@ Hi, I'm Felix. I automated my routine of scanning my documents, bills, etc. and 
 	Linux/Mac: `pip3 install -r requirements.txt`
 	Windows:   `pip install -r requirements.txt`
 4. Edit the variables to fit your pupose.   
-	`age_of_files = 30  # at which age files should be deleted?   
-	 working_dir = '/<observed_dir>/'  # which folder should be observed?   
-	 ifttt_integration = True  # do you wish to get an notification through IFTTT whenever a file gets deleted?   
-	 logging = True  # do you want to have a log file with every action this skript does to your files?   
-	 run_ifttt_webhook_name = 'run_dropbox_automatic_deletion'  # Name of your Webhook for notification whenever the scrips runs    
-	 deleted_ifttt_webhook_name = 'file_deleted'  # Name of your Webhook for notification whenever a file gets deleted`
+	`age_of_files = 30  # at which age files should be deleted?`
+	 `working_dir = '/<observed_dir>/'  # which folder should be observed?`
+	 `ifttt_integration = True  # do you wish to get an notification through IFTTT whenever a file gets deleted?` 
+	 `logging = True  # do you want to have a log file with every action this skript does to your files?`
+	 `run_ifttt_webhook_name = 'run_dropbox_automatic_deletion'  # Name of your Webhook for notification whenever the scrips runs` 
+	 `deleted_ifttt_webhook_name = 'file_deleted'  # Name of your Webhook for notification whenever a file gets deleted`
 5. The last Step is to edit the `.env` file. In this file you have to safe your Token for Dropbox and your Webhook Key for IFTTT.
 You don't have those? I'll show you how to get one.
 
