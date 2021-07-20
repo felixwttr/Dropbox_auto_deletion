@@ -17,8 +17,8 @@ age_of_files = 30                           # at which age files should be delet
 working_dir = '/Felix iPhone Scans/'        # which folder should be observed?
 ifttt_integration = True                    # do you wish to get an notification through IFTTT whenever a file gets deleted?
 logging = True                              # do you want to have a log file with every action this skript does to your files?
-run_ifttt_webhook_name = 'run_dropbox_automatic_deletion'
-deleted_ifttt_webhook_name = 'file_deleted'
+run_ifttt_webhook_name = 'run_dropbox_automatic_deletion' # Name of your Webhook for notification whenever the scrips runs
+deleted_ifttt_webhook_name = 'file_deleted'               # Name of your Webhook for notification whenever a file gets deleted
 
 
 # Don't touch these
