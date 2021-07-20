@@ -72,28 +72,3 @@ Copy this key into the `.env` file if you want IFTTT notifications
 
 
 # How does the script work?
-
-You can render UML diagrams using [Mermaid](https://mermaidjs.github.io/). For example, this will produce a sequence diagram:
-
-```mermaid
-sequenceDiagram
-Script ->> Dropbox: Hello Bob, how are you?
-Dropbox->> Script: Token correct/invalid
-Dropbox-->>IFTTT: Script is now running
-Script ->> Dropbox: Which files are in the working directory?
-Dropbox ->> Script: [Files]
-Script ->> Dropbox: What are the names of these files?
-Dropbox ->> Script: These are the names.
-Script ->> Dropbox: For ervery item in the name list: When was it uploaded?
-
-```
-
-And this will produce a flow chart:
-
-```mermaid
-graph TB
-A[Square Rect] -- Link text --> B((Circle))
-A --> C(Round Rect)
-B --> D{Rhombus}
-C --> D
-```
