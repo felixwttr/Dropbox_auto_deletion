@@ -14,7 +14,7 @@ load_dotenv()
 TOKEN = os.getenv('TOKEN')                  # Update your DropBox TOKEN in the .env file
 IFTTT_KEY = os.getenv('IFTTT_KEY')          # Update your IFTTT Webhook Key in the .env file
 age_of_files = 30                           # at which age files should be deleted?
-working_dir = '/Felix iPhone Scans/'        # which folder should be observed?
+dropbox_folder = 'Felix iPhone Scans'        # which folder should be observed?
 ifttt_integration = True                    # do you wish to get an notification through IFTTT whenever a file gets deleted?
 logging = True                              # do you want to have a log file with every action this skript does to your files?
 run_ifttt_webhook_name = 'run_dropbox_automatic_deletion' # Name of your Webhook for notification whenever the scrips runs
@@ -26,6 +26,7 @@ srcpath = Path(__file__).parent.absolute()
 log_path = str(srcpath) + '/log.log' # pwd of logfile
 now = datetime.now(pytz.utc).strftime('%Y-%m-%d %H:%M:%S')
 now = datetime.strptime(now, '%Y-%m-%d %H:%M:%S') # current timestamp
+working_dir = '/' + dropbox_folder + '/'
 
 #log function
 def log(message):
