@@ -39,7 +39,7 @@ dbx = dropbox.Dropbox(TOKEN)
 
 if ifttt_integration:
     url = 'https://maker.ifttt.com/trigger/' + run_ifttt_webhook_name + '/with/key/' + IFTTT_KEY
-    data = {'value1': '', 'value2': '', 'value3': ''}
+    data = {'value1': dropbox_folder, 'value2': '', 'value3': ''}
     headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
     r = requests.post(url, data=json.dumps(data), headers=headers)
 
